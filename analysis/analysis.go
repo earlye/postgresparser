@@ -427,6 +427,7 @@ func convertDDLActions(actions []postgresparser.DDLAction) []SQLDDLAction {
 			Schema:        a.Schema,
 			Columns:       append([]string(nil), a.Columns...),
 			ColumnDetails: convertDDLColumns(a.ColumnDetails),
+			Constraints:   convertDDLConstraints(a.Constraints),
 			Flags:         append([]string(nil), a.Flags...),
 			IndexType:     a.IndexType,
 			Target:        a.Target,
@@ -449,6 +450,64 @@ func convertDDLColumns(cols []postgresparser.DDLColumn) []SQLDDLColumn {
 			Nullable: c.Nullable,
 			Default:  c.Default,
 			Comment:  append([]string(nil), c.Comment...),
+		})
+	}
+	return out
+}
+
+// convertDDLConstraints maps parser DDLConstraints into analysis DDLConstraints.
+func convertDDLConstraints(c *postgresparser.DDLConstraints) *SQLDDLConstraints {
+	if c == nil {
+		return nil
+	}
+	return &SQLDDLConstraints{
+		PrimaryKey:  convertDDLPrimaryKey(c.PrimaryKey),
+		ForeignKeys: convertDDLForeignKeys(c.ForeignKeys),
+		UniqueKeys:  convertDDLUniqueKeys(c.UniqueKeys),
+	}
+}
+
+// convertDDLPrimaryKey maps parser PK metadata into an analysis DTO.
+func convertDDLPrimaryKey(pk *postgresparser.DDLPrimaryKey) *SQLDDLPrimaryKey {
+	if pk == nil {
+		return nil
+	}
+	return &SQLDDLPrimaryKey{
+		ConstraintName: pk.ConstraintName,
+		Columns:        append([]string(nil), pk.Columns...),
+	}
+}
+
+// convertDDLForeignKeys maps parser FK metadata into analysis DTOs.
+func convertDDLForeignKeys(fks []postgresparser.DDLForeignKey) []SQLDDLForeignKey {
+	if len(fks) == 0 {
+		return nil
+	}
+	out := make([]SQLDDLForeignKey, 0, len(fks))
+	for _, fk := range fks {
+		out = append(out, SQLDDLForeignKey{
+			ConstraintName:    fk.ConstraintName,
+			Columns:           append([]string(nil), fk.Columns...),
+			ReferencesSchema:  fk.ReferencesSchema,
+			ReferencesTable:   fk.ReferencesTable,
+			ReferencesColumns: append([]string(nil), fk.ReferencesColumns...),
+			OnDelete:          string(fk.OnDelete),
+			OnUpdate:          string(fk.OnUpdate),
+		})
+	}
+	return out
+}
+
+// convertDDLUniqueKeys maps parser UNIQUE constraint metadata into analysis DTOs.
+func convertDDLUniqueKeys(uks []postgresparser.DDLUniqueConstraint) []SQLDDLUniqueConstraint {
+	if len(uks) == 0 {
+		return nil
+	}
+	out := make([]SQLDDLUniqueConstraint, 0, len(uks))
+	for _, uk := range uks {
+		out = append(out, SQLDDLUniqueConstraint{
+			ConstraintName: uk.ConstraintName,
+			Columns:        append([]string(nil), uk.Columns...),
 		})
 	}
 	return out

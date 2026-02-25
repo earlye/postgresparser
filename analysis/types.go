@@ -181,6 +181,36 @@ type SQLDDLColumn struct {
 	Comment  []string
 }
 
+// SQLDDLPrimaryKey describes CREATE TABLE primary key metadata.
+type SQLDDLPrimaryKey struct {
+	ConstraintName string
+	Columns        []string
+}
+
+// SQLDDLForeignKey describes CREATE TABLE foreign key metadata.
+type SQLDDLForeignKey struct {
+	ConstraintName    string
+	Columns           []string
+	ReferencesSchema  string
+	ReferencesTable   string
+	ReferencesColumns []string
+	OnDelete          string
+	OnUpdate          string
+}
+
+// SQLDDLUniqueConstraint describes CREATE TABLE UNIQUE constraint metadata.
+type SQLDDLUniqueConstraint struct {
+	ConstraintName string
+	Columns        []string
+}
+
+// SQLDDLConstraints bundles constraint metadata in DDL analysis results.
+type SQLDDLConstraints struct {
+	PrimaryKey  *SQLDDLPrimaryKey
+	ForeignKeys []SQLDDLForeignKey
+	UniqueKeys  []SQLDDLUniqueConstraint
+}
+
 // SQLDDLAction describes a single DDL operation in the analysis result.
 type SQLDDLAction struct {
 	Type          string
@@ -189,6 +219,7 @@ type SQLDDLAction struct {
 	Schema        string
 	Columns       []string
 	ColumnDetails []SQLDDLColumn
+	Constraints   *SQLDDLConstraints
 	Flags         []string
 	IndexType     string
 	Target        string
