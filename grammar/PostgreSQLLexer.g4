@@ -102,6 +102,10 @@ TYPECAST: '::';
 
 PERCENT: '%';
 
+QUESTION_AND: '?' '&';
+
+QUESTION_OR: '?' '|';
+
 PARAM
     : '$' ([0-9])+
     | '?'

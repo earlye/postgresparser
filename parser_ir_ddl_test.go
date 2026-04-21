@@ -1532,6 +1532,36 @@ func TestIR_DDL_CreateTableWithCheckConstraint(t *testing.T) {
 			wantChecks:     1,
 			wantConstraint: "valid_email",
 		},
+		{
+			name: "JSONB ? key-exists operator in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_key CHECK (data ? 'some_key')
+			);`,
+			wantChecks:     1,
+			wantConstraint: "chk_has_key",
+			wantExpr:       "data ? 'some_key'",
+		},
+		{
+			name: "JSONB ?| any-key-exists operator in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_any CHECK (data ?| ARRAY['key1', 'key2'])
+			);`,
+			wantChecks:     1,
+			wantConstraint: "chk_has_any",
+			wantExpr:       "data ?| ARRAY['key1', 'key2']",
+		},
+		{
+			name: "JSONB ?& all-keys-exist operator in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_all CHECK (data ?& ARRAY['key1', 'key2'])
+			);`,
+			wantChecks:     1,
+			wantConstraint: "chk_has_all",
+			wantExpr:       "data ?& ARRAY['key1', 'key2']",
+		},
 	}
 
 	for _, tc := range tests {
@@ -1595,4 +1625,84 @@ func TestIR_DDL_Issue32_StoreSettingsCheck(t *testing.T) {
 
 	assert.Equal(t, "store_settings_id_check", act.Constraints.CheckConstraints[1].ConstraintName)
 	assert.Equal(t, "(id = true)", act.Constraints.CheckConstraints[1].Expression)
+}
+
+// TestIR_DDL_JSONBCheckConstraintOperators verifies that the JSONB operators ?, ?|, and ?&
+// are accepted inside CHECK constraint expressions.  Before the grammar fix these caused a
+// parse error that silently dropped all subsequent statements.
+func TestIR_DDL_JSONBCheckConstraintOperators(t *testing.T) {
+	tests := []struct {
+		name           string
+		sql            string
+		wantConstraint string
+		wantExpr       string
+	}{
+		{
+			name: "? key-exists in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_key CHECK (data ? 'some_key')
+			);`,
+			wantConstraint: "chk_has_key",
+			wantExpr:       "data ? 'some_key'",
+		},
+		{
+			name: "?| any-key-exists in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_any CHECK (data ?| ARRAY['key1', 'key2'])
+			);`,
+			wantConstraint: "chk_has_any",
+			wantExpr:       "data ?| ARRAY['key1', 'key2']",
+		},
+		{
+			name: "?& all-keys-exist in table-level CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb,
+				CONSTRAINT chk_has_all CHECK (data ?& ARRAY['key1', 'key2'])
+			);`,
+			wantConstraint: "chk_has_all",
+			wantExpr:       "data ?& ARRAY['key1', 'key2']",
+		},
+		{
+			name: "? in inline column CHECK",
+			sql: `CREATE TABLE example (
+				data jsonb CONSTRAINT chk_inline CHECK (data ? 'key')
+			);`,
+			wantConstraint: "chk_inline",
+			wantExpr:       "data ? 'key'",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ir := parseAssertNoError(t, tc.sql)
+			require.Equal(t, QueryCommandDDL, ir.Command)
+			require.Len(t, ir.DDLActions, 1)
+			act := ir.DDLActions[0]
+			require.NotNil(t, act.Constraints)
+			require.Len(t, act.Constraints.CheckConstraints, 1)
+			assert.Equal(t, tc.wantConstraint, act.Constraints.CheckConstraints[0].ConstraintName)
+			assert.Equal(t, tc.wantExpr, act.Constraints.CheckConstraints[0].Expression)
+		})
+	}
+}
+
+// TestIR_DDL_JSONBCheckConstraint_NoStatementDropping verifies that a JSONB CHECK constraint
+// does not cause subsequent SQL statements to be silently dropped.
+func TestIR_DDL_JSONBCheckConstraint_NoStatementDropping(t *testing.T) {
+	sql := `CREATE TABLE t1 (id integer);
+CREATE TABLE example (
+	data jsonb,
+	CONSTRAINT chk_has_key CHECK (data ? 'some_key')
+);
+CREATE TABLE t2 (id integer);`
+
+	batch, err := ParseSQLAll(sql)
+	require.NoError(t, err)
+	require.Len(t, batch.Statements, 3, "all three statements must be parsed; none may be silently dropped")
+	assert.False(t, batch.HasFailures, "no statement should fail to parse")
+	for i, stmt := range batch.Statements {
+		require.NotNil(t, stmt.Query, "statement %d must have a parsed query", i+1)
+	}
 }

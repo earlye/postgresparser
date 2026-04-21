@@ -3637,7 +3637,7 @@ a_expr_like
 /* 8*/
 
 a_expr_qual_op
-    : a_expr_unary_qualop (qual_op a_expr_unary_qualop)*
+    : a_expr_unary_qualop ((qual_op | PARAM | QUESTION_OR | QUESTION_AND) a_expr_unary_qualop)*
     ;
 
 /* 9*/
