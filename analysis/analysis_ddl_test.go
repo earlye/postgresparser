@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/valkdb/postgresparser"
+	"github.com/earlye/postgresparser"
 )
 
 // TestAnalyzeSQL_DDL_DropTable validates DROP TABLE metadata including IF EXISTS, CASCADE, and multi-table.

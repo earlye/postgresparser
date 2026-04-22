@@ -7,7 +7,7 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // populateInsert records INSERT target tables, columns, and upsert metadata.

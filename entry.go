@@ -7,7 +7,7 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // ParseSQL parses only the first SQL statement in the input string.

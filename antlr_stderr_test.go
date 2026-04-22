@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 var stderrCaptureMu sync.Mutex

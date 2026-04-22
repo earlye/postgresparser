@@ -7,8 +7,8 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
-	"github.com/valkdb/postgresparser/internal/ident"
+	"github.com/earlye/postgresparser/gen"
+	"github.com/earlye/postgresparser/internal/ident"
 )
 
 // populateCreateTable handles CREATE TABLE metadata extraction (table + columns)

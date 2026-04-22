@@ -5,8 +5,8 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 	pgquery "github.com/pganalyze/pg_query_go/v6"
-	"github.com/valkdb/postgresparser"
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // queries covers a range of SQL complexity levels.

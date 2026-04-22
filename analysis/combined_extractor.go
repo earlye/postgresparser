@@ -6,7 +6,7 @@ package analysis
 import (
 	"fmt"
 
-	"github.com/valkdb/postgresparser"
+	"github.com/earlye/postgresparser"
 )
 
 // QueryAnalysisResult holds the combined results of query analysis.

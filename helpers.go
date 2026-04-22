@@ -7,8 +7,8 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
-	"github.com/valkdb/postgresparser/internal/ident"
+	"github.com/earlye/postgresparser/gen"
+	"github.com/earlye/postgresparser/internal/ident"
 )
 
 // columnRef is an internal representation of a column reference.

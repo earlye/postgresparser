@@ -19,7 +19,7 @@ import (
 	"log"
 
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 func main() {

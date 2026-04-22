@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // comparisonInfo holds information about a single comparison expression.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/valkdb/postgresparser/analysis"
+	"github.com/earlye/postgresparser/analysis"
 )
 
 func main() {

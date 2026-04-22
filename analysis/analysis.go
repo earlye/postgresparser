@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/valkdb/postgresparser"
+	"github.com/earlye/postgresparser"
 )
 
 // AnalyzeSQL parses and analyzes only the first SQL statement in the input.

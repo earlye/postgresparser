@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/valkdb/postgresparser/internal/ident"
+	"github.com/earlye/postgresparser/internal/ident"
 )
 
 // BaseTables returns unique base relations referenced by the query.

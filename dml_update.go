@@ -6,7 +6,7 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // populateUpdate records UPDATE targets, SET clauses, joins, and returning data.

@@ -1,7 +1,9 @@
 # postgresparser
 
+> **This is a fork of [github.com/valkdb/postgresparser](https://github.com/valkdb/postgresparser) that contains additional fixes and features applied via AI-assisted prompts. See [Prompts / Fixes](#prompts--fixes) below for details.**
+
 [![CI](https://github.com/valkdb/postgresparser/actions/workflows/ci.yml/badge.svg)](https://github.com/valkdb/postgresparser/actions/workflows/ci.yml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/valkdb/postgresparser.svg)](https://pkg.go.dev/github.com/valkdb/postgresparser)
+[![Go Reference](https://pkg.go.dev/badge/github.com/earlye/postgresparser.svg)](https://pkg.go.dev/github.com/earlye/postgresparser)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 A pure-Go PostgreSQL parser. No cgo, no C toolchain — just `go build`.
@@ -55,7 +57,7 @@ fmt.Println(batch.Statements[1].Query.DDLActions[0].ObjectName) // "sometable"
 ## Installation
 
 ```bash
-go get github.com/valkdb/postgresparser
+go get github.com/earlye/postgresparser
 ```
 
 ## What you can build with it
@@ -206,6 +208,13 @@ antlr4 -Dlanguage=Go -visitor -listener -package gen -o gen grammar/PostgreSQLLe
 This is an ANTLR4-based grammar, not PostgreSQL's internal server parser. Some edge-case syntax may differ across PostgreSQL versions. If you find a query that parses in PostgreSQL but fails here, please [open an issue](https://github.com/valkdb/postgresparser/issues) with a minimal repro.
 
 `ParseSQL` processes the first SQL statement for backward compatibility. For multi-statement input, use `ParseSQLAll`; to enforce exactly one statement, use `ParseSQLStrict`.
+
+## Prompts / Fixes
+
+The following AI-assisted prompts were applied to this fork on top of the upstream repo:
+
+- [feature-000.md](../prompts/feature-000.md) — Update module path to fork location so pkg.go.dev indexes this version
+- [feature-001.md](../prompts/feature-001.md) — Fix: JSONB operators `?`, `?|`, `?&` not valid in CHECK constraint expressions
 
 ## License
 

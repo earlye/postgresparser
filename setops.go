@@ -7,7 +7,7 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 
-	"github.com/valkdb/postgresparser/gen"
+	"github.com/earlye/postgresparser/gen"
 )
 
 // extractSetOperationsWithResult traverses UNION/INTERSECT/EXCEPT chains with optional result for column usage recording.

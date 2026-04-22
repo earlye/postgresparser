@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/valkdb/postgresparser"
+	"github.com/earlye/postgresparser"
 )
 
 // TestColumnsForTableUsesColumnUsage validates ColumnsForTable filters by alias and usage types.
