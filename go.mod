@@ -1,4 +1,4 @@
-module github.com/valkdb/postgresparser
+module github.com/earlye/postgresparser
 
 go 1.25.6
 
